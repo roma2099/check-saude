@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.js": "/check-saude/static/js/main.18c100bd.js",
+    "static/js/453.5f180b19.chunk.js": "/check-saude/static/js/453.5f180b19.chunk.js",
+    "index.html": "/check-saude/index.html",
+    "main.18c100bd.js.map": "/check-saude/static/js/main.18c100bd.js.map",
+    "453.5f180b19.chunk.js.map": "/check-saude/static/js/453.5f180b19.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.18c100bd.js"
+  ]
+}
