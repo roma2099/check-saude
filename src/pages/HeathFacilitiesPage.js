@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Toolbar,Paper,Container, List, ListItem, ListItemText, Typography, CircularProgress } from '@mui/material';
+import { Toolbar,Paper,Container, List, ListItem, ListItemText, Typography, CircularProgress,MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,6 +12,7 @@ const healthFacilities = [
     { name: 'Clinica A', lat: 37.7749, lng: -122.4194, type: 'Clinica', status: 'Livre' },
     { name: 'Hospital B', lat: 37.8044, lng: -122.2711, type: 'Hospital', status: 'Cheio' },
     { name: 'Clinica C', lat: 37.7749, lng: -122.4313, type: 'Clinica', status: 'Muito Cheio' },
+    { name: 'Centro de Saude', lat: 37.7749, lng: -122.4313, type: 'Centro_de_Saude', status: 'Muito Cheio' },
     // Add more facilities as needed
   ];
 const calculateDistance = (lat1, lng1, lat2, lng2) => {
@@ -32,10 +33,20 @@ const HealthFacilitiesPage = () => {
     const [distances, setDistances] = useState([]);
     const [loading, setLoading] = useState(true);
     const [state, setState] = useState(false);
+    const [filter, setFilter] = useState('Todos');
 
     const toggleDrawer = (open)  => {
         setState(open);
       }
+      useEffect(() => {
+        
+        const params = new URLSearchParams(window.location.search);
+        const type = params.get('type');
+        if (type) {
+          setFilter(type);
+        }
+      }, []);
+    
     useEffect(() => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -65,7 +76,9 @@ const HealthFacilitiesPage = () => {
         setLoading(false);
       }
     }, [userLocation]);
-  
+    
+    const filteredFacilities = distances.filter(facility => filter === 'Todos' || facility.type === filter);
+
     return (
       <Container>
               <Toolbar />
@@ -77,6 +90,19 @@ const HealthFacilitiesPage = () => {
         <Typography variant="h4" gutterBottom>
           Hospitais, Clinicas e Centros de Saude
         </Typography>
+        <FormControl variant="outlined" fullWidth margin="normal">
+        <InputLabel>Filtrar por</InputLabel>
+        <Select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          label="Filtrar Por"
+        >
+          <MenuItem value="Todos">Todos</MenuItem>
+          <MenuItem value="Clinica">Clinica</MenuItem>
+          <MenuItem value="Hospital">Hospital</MenuItem>
+          <MenuItem value="Centro_de_Saude">Centro de Saude</MenuItem>
+        </Select>
+      </FormControl>
         {loading ? (
           <CircularProgress />
         ) : (
@@ -90,13 +116,13 @@ const HealthFacilitiesPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {distances.map((row) => (
+                {filteredFacilities.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="center">{row.distance}</TableCell>
+                    <TableCell align="center">{row.distance} km</TableCell>
                     <TableCell align="center">{row.status}</TableCell>
                     
                   </TableRow>

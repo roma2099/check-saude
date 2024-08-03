@@ -1,10 +1,10 @@
 import React, { useState} from 'react';
-import { Stack,Container,Box, TextField, Button, Paper, List, ListItem, ListItemText, Typography ,Toolbar} from '@mui/material';
+import { Link,Stack,Container,Box, TextField, Button, Paper, List, ListItem, ListItemText, Typography ,Toolbar} from '@mui/material';
 import TopBar from '../components/TopBar';
 
 const mensagensAleatorias =[ 
-  { sender: 'bot', text: `De acordo com os simptomas descritos deve procurar um centro de saude mais proximo de Si. Click no link a seguir para ver as opções de Centro de Saude` },
-  { sender: 'bot', text: `De acordo com os simptomas descritos deve procurar as urgencias. Click no link para ver A localizaçao ou ligue para 0000000.` },
+  { sender: 'bot',link:"http://localhost:3000/facilities?type=Centro_de_Saude", text: `De acordo com os simptomas descritos deve procurar um centro de saude mais proximo de Si. Click no link a seguir para ver as opções de Centro de Saude` },
+  { sender: 'bot',link:"http://localhost:3000/facilities?type=Hospital", text: `De acordo com os simptomas descritos deve procurar as urgencias. Click no link para ver A localizaçao ou ligue para 0000000.` },
   { sender: 'bot', text: `Informaçoes insuficientes. Por Favor descreva com mais detalhes quais os sintomas.` }
 ]
 
@@ -48,14 +48,19 @@ const HomePage = () => {
           {messages.map((msg, index) => (
             <ListItem key={index} style={{ justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}>
               <ListItemText
-                primary={msg.text}
+                
+      
                 style={{
                   backgroundColor: msg.sender === 'user' ? '#e0f7fa' : '#f1f1f1',
                   padding: '0.5rem',
                   borderRadius: '10px',
                   maxWidth: '80%',
                 }}
-              />
+              >
+                {msg.text} {msg.link && (
+                        <Link href={msg.link}>Link</Link>
+                      )}
+              </ListItemText>
             </ListItem>
           ))}
         </List>
